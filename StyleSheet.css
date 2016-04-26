@@ -1,0 +1,52 @@
+﻿h1 {
+font-family:narkisim;
+font-size: 38px;
+color:#11358A;
+font-weight:bold;
+}
+
+
+
+.rt-ruler ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+.rt-ruler li {
+    float: left;
+    border-right:1px solid #bbb;
+}
+
+
+ .rt-ruler li:last-child {
+    border-right: none;
+}
+
+.rt-ruler li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.rt-ruler li a:hover:not(.active) {
+    background-color: #11358A;
+}
+
+p {
+font-family:narkisim;
+font-size: 20px;
+color:#11358A;
+font-weight:bold; 
+}
+ 
+.rt-info
+{
+    background-color:White;
+    position:absolute;
+    
+}
