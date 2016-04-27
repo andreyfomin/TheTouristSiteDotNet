@@ -48,7 +48,7 @@ public partial class ManageTours : System.Web.UI.Page
                 }
 
             }
-                catch (Exception err)
+            catch (Exception err)
             {
                 string error = err.Message;
             }
@@ -66,17 +66,17 @@ public partial class ManageTours : System.Web.UI.Page
 
     protected void DropDownListTours_Click(object sender, EventArgs e)
     {
-       
+
         ArrayList tours = (ArrayList)this.Application["tours"];
         Tour selectedTour = null;
-        
+
         foreach (Tour tour in tours)
         {
-            if (DropDownListTours.SelectedValue!=null)
-            if (tour.Id == DropDownListTours.SelectedIndex+2)
-            {
-                selectedTour = tour;
-            }
+            if (DropDownListTours.SelectedValue != null)
+                if (tour.Id == DropDownListTours.SelectedIndex + 2)
+                {
+                    selectedTour = tour;
+                }
         }
 
         if (selectedTour != null)
@@ -86,7 +86,7 @@ public partial class ManageTours : System.Web.UI.Page
 
     }
 
-    
+
     public static Control[] FlattenHierachy(Control root)
     {
         List<Control> list = new List<Control>();
@@ -135,10 +135,10 @@ public partial class ManageTours : System.Web.UI.Page
         {
             ArrayList tours = (ArrayList)Application["tours"];
             string str = FileUpload1.FileName;
-            FileUpload1.PostedFile.SaveAs(Server.MapPath(".") + "//uploads//" + str);
-            string path = "~//uploads//" + str.ToString();
+            FileUpload1.PostedFile.SaveAs(Server.MapPath(".") + "/images/" + str);
+            string path = "images/" + str.ToString();
             SqlConnection con = new SqlConnection(connectionString);
-           
+
             if (tours != null)
             {
                 Tour KnownTour = Array.Find((Tour[])tours.ToArray(typeof(Tour)),
@@ -170,7 +170,7 @@ public partial class ManageTours : System.Web.UI.Page
                     cmd.Parameters.AddWithValue("@image", path);
                     cmd.Parameters.AddWithValue("@description", TextBox2.Text);
                     cmd.Parameters.AddWithValue("@tour_id", KnownTour.Id);
-                   
+
                     // Try to open database and execute the update.
                     int updated = 0;
                     try
@@ -195,7 +195,7 @@ public partial class ManageTours : System.Web.UI.Page
     }
 
 
-    
+
 
     protected void AdminDeleteTour_Click(object sender, EventArgs e)
     {
@@ -259,10 +259,10 @@ public partial class ManageTours : System.Web.UI.Page
             ClearDropDownLists();
             ClearTextBoxes();
 
-                 
-           
+
+
         }
     }
 
 
-    }
+}
