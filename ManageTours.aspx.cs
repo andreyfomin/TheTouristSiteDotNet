@@ -220,15 +220,15 @@ public partial class ManageTours : System.Web.UI.Page
         string deleteTourSQL;
         deleteTourSQL = "DELETE FROM tours WHERE id=@id";
 
-        SqlConnection conn = new SqlConnection(connectionString);
-        SqlCommand comd = new SqlCommand(deleteTourSQL, conn);
+        con = new SqlConnection(connectionString);
+        cmd = new SqlCommand(deleteTourSQL, con);
 
-        comd.Parameters.AddWithValue("@id ", selectedTour.Id);
-        int removed2 = 0;
+        cmd.Parameters.AddWithValue("@id ", selectedTour.Id);
+        removed = 0;
         try
         {
             con.Open();
-            removed2 = cmd.ExecuteNonQuery();
+            removed = cmd.ExecuteNonQuery();
 
         }
         catch (Exception err)
