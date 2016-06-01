@@ -42,6 +42,9 @@
             <li>
                 <asp:LinkButton ID="ManageToursLinkButton" runat="server" OnClick="ManageToursLinkButton_Click">Manage tours</asp:LinkButton>
             </li>
+            <li>
+                <asp:LinkButton ID="ManageUsersLinkButton" runat="server" OnClick="UsersManagerLinkButton_Click">Manage users</asp:LinkButton>
+            </li>
         </ul>
     </div>
     <div class="rt-container">
@@ -54,12 +57,12 @@
                  <asp:Button ID="AddRemoveTourButton" runat="server" Text="Add Tour" OnClick="AddRemoveTourButton_Click" />
             </div>
         </div>
-        <div class="rt-img&info">
+        <div class="rt-img&info" style="height:500px">
           
             <div class="rt-img">
-                <asp:Image ID="ImageRomania" runat="server" Height="200px" style="margin-left:200px;" />
+                <asp:Image ID="ImageRomania" runat="server" Height="200px" style="margin-left:200px;margin-bottom:0px;margin-top:0px;" />
             </div>
-            <asp:Panel ID="TourDescriptionPanel" runat="server" style="margin-left:200px;height:500px;background-color:Lime;width:1207px">
+            <asp:Panel ID="TourDescriptionPanel" runat="server" style="margin-left:200px;margin-top:0px;background-color:lime;height:300px;width:1207px">
             </asp:Panel>
             <!--
             <div class="info" style="margin-left:200px;height:500px;background-color:Lime;width:1207px">

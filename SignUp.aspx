@@ -4,6 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title></title>
+    <script type="text/javascript" src="js/tours.js"></script>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -14,7 +15,10 @@
                     <asp:Label ID="LabelFName" runat="server" Text="Label">First Name</asp:Label>
                 </td>
                 <td>
-                    <asp:TextBox ID="TextBoxFName" runat="server"></asp:TextBox>
+                    <asp:TextBox ID="TextBoxFName" runat="server" onKeyPress="FNameValueKeyPress()"></asp:TextBox>
+                </td>
+                <td>
+                    <asp:Label ID="LabelFNameError" runat="server" Text=""></asp:Label>
                 </td>
             </tr>
             <tr>
@@ -22,7 +26,10 @@
                     <asp:Label ID="LabelLName" runat="server" Text="Label">Last Name</asp:Label>
                 </td>
                 <td>
-                    <asp:TextBox ID="TextBoxLName" runat="server"></asp:TextBox>
+                    <asp:TextBox ID="TextBoxLName" runat="server" onKeyPress="LNameValueKeyPress()"></asp:TextBox>
+                </td>
+                <td> 
+                <asp:Label ID="LabelLNameError" runat="server" Text=""></asp:Label>
                 </td>
             </tr>
             <tr>
@@ -40,7 +47,10 @@
                     <asp:Label ID="LabelUser" runat="server" Text="Label">Username</asp:Label>
                 </td>
                 <td>
-                    <asp:TextBox ID="TextBoxUser" runat="server"></asp:TextBox>
+                    <asp:TextBox ID="TextBoxUser" runat="server" onKeyPress="UserValueKeyPress()"></asp:TextBox>
+                </td>
+                <td>
+                    <asp:Label ID="TextBoxUserError" runat="server" Text="" ForeColor="Red"></asp:Label>
                 </td>
             </tr>
             <tr>
@@ -50,13 +60,17 @@
                 <td>
                     <asp:TextBox ID="TextBoxPassword" runat="server"></asp:TextBox>
                 </td>
+                
             </tr>
             <tr>
                 <td>
                     <asp:Label ID="LabelEmail" runat="server" Text="Label">Email</asp:Label>
                 </td>
                 <td>
-                    <asp:TextBox ID="TextBoxEmail" runat="server"></asp:TextBox>
+                    <asp:TextBox ID="TextBoxEmail" runat="server"  onKeyPress="EmailValueKeyPress()"></asp:TextBox>
+                </td>
+                <td>
+                    <asp:Label ID="LabelTextBoxEmailError" runat="server" Text=""></asp:Label>
                 </td>
             </tr>
             <tr>
@@ -64,7 +78,10 @@
                     <asp:Label ID="LabelPhone" runat="server" Text="Label">Phone number</asp:Label>
                 </td>
                 <td>
-                    <asp:TextBox ID="TextBoxPhone" runat="server"></asp:TextBox>
+                    <asp:TextBox ID="TextBoxPhone" runat="server"  onKeyPress="PhoneValueKeyPress()"></asp:TextBox>
+                </td>
+                <td>
+                    <asp:Label ID="LabelTextBoxPhoneError" runat="server" Text=""></asp:Label>
                 </td>
             </tr>
             <tr>
@@ -72,7 +89,6 @@
                     <asp:Label ID="ErrorMessageLabel" runat="server" Text="" ForeColor="Red"></asp:Label>
                 </td>
             </tr>
-            
             <tr>
                 <asp:LinkButton ID="ConnectLinkButton" runat="server" OnClick="ConnectLinkButton_Click">Welcome!</asp:LinkButton>
             </tr>

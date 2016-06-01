@@ -7,6 +7,9 @@ using System.Web.UI.WebControls;
 using System.Collections;
 using System.Web.Configuration;
 using System.Data.SqlClient;
+using System.Drawing;
+
+
 
 
 public partial class ManageTours : System.Web.UI.Page
@@ -19,50 +22,11 @@ public partial class ManageTours : System.Web.UI.Page
     {
         if (this.IsPostBack == false)
         {
-            string selectToursSQL = "SELECT * FROM tours";
-            SqlConnection myConnection = new SqlConnection(connectionString);
-            SqlCommand cmdTours = new SqlCommand(selectToursSQL, myConnection);
-            SqlDataReader toursReader;
-            ArrayList tours = new ArrayList(10);
-
-            try
-            {
-                using (myConnection)
-                {
-                    // Try to open the connection.
-                    myConnection.Open();
-                    toursReader = cmdTours.ExecuteReader();
-                    while (toursReader.Read())
-                    {
-                        tours.Add(
-                            new Tour(
-                            Int32.Parse(toursReader["id"].ToString()),
-                            toursReader["info"].ToString(),
-                            toursReader["image"].ToString(),
-                            toursReader["description"].ToString()
-                            ));
-
-
-                    }
-                    toursReader.Close();
-                }
-
-            }
-            catch (Exception err)
-            {
-                string error = err.Message;
-            }
-            myConnection.Close();
-
-            Application["tours"] = tours;
-
-            foreach (Tour tour in tours)
-            {
-
-                DropDownListTours.Items.Add(new ListItem(tour.Info, Convert.ToString(tour.Id)));
-            }
+            DropDownListsLoad(true);
         }
-    }
+        }
+
+
 
 
     public static Control[] FlattenHierachy(Control root)
@@ -93,16 +57,53 @@ public partial class ManageTours : System.Web.UI.Page
     }
 
 
-    private void ClearDropDownLists()
+    private void DropDownListsLoad(bool remove)
     {
-        Control[] allControls = FlattenHierachy(Page);
-        foreach (Control control in allControls)
+        string selectToursSQL = "SELECT * FROM tours";
+        SqlConnection myConnection = new SqlConnection(connectionString);
+        SqlCommand cmdTours = new SqlCommand(selectToursSQL, myConnection);
+        SqlDataReader toursReader;
+        ArrayList tours = new ArrayList(10);
+        if (remove)
         {
-            DropDownList ddl = control as DropDownList;
-            if (ddl != null)
+            DropDownListTours.Items.Clear();
+        }
+
+        try
+        {
+            using (myConnection)
             {
-                ddl.SelectedValue = null;
+                // Try to open the connection.
+                myConnection.Open();
+                toursReader = cmdTours.ExecuteReader();
+                while (toursReader.Read())
+                {
+                    tours.Add(
+                        new Tour(
+                        Int32.Parse(toursReader["id"].ToString()),
+                        toursReader["info"].ToString(),
+                        toursReader["image"].ToString(),
+                        toursReader["description"].ToString()
+                        ));
+
+
+                }
+                toursReader.Close();
             }
+
+        }
+        catch (Exception err)
+        {
+            string error = err.Message;
+        }
+        myConnection.Close();
+
+        Application["tours"] = tours;
+
+        foreach (Tour tour in tours)
+        {
+
+            DropDownListTours.Items.Add(new ListItem(tour.Info, Convert.ToString(tour.Id)));
         }
     }
 
@@ -123,16 +124,26 @@ public partial class ManageTours : System.Web.UI.Page
                          tour => tour.Info.Equals(TextBox1.Text) || tour.Description.Equals(TextArea1.Value) || tour.Image.Equals(path));
                 if (KnownTour == null)
                 {
-                    con.Open();
-                    SqlCommand cmd = new SqlCommand("insert into tours (info,image,description) values (@info,@image,@description)", con);
-                    cmd.Parameters.AddWithValue("@info", TextBox1.Text);
-                    cmd.Parameters.AddWithValue("@image", path);
-                    cmd.Parameters.AddWithValue("@description", TextArea1.Value);
+                    int added = 0;
+                    try
+                    {
+                        con.Open();
+                        SqlCommand cmd = new SqlCommand("insert into tours (info,image,description) values (@info,@image,@description)", con);
+                        cmd.Parameters.AddWithValue("@info", TextBox1.Text);
+                        cmd.Parameters.AddWithValue("@image", path);
+                        cmd.Parameters.AddWithValue("@description", TextArea1.Value);
 
-                    cmd.ExecuteNonQuery();
+                        added = cmd.ExecuteNonQuery();
+                        LabelErrorMessage.Text = added.ToString()+"  tour was added";
+                    }
+                    catch (Exception err)
+                    {
+                        LabelErrorMessage.ForeColor = Color.Red;
+                        LabelErrorMessage.Text = "Error-the tour was not added";
+                    }
                     con.Close();
                     ClearTextBoxes();
-                    ClearDropDownLists();
+                    DropDownListsLoad(true);
                 }
                 else
                 {
@@ -141,13 +152,15 @@ public partial class ManageTours : System.Web.UI.Page
                     updateSQL += "info=@info, image=@image, ";
                     updateSQL += "description=@description ";
 
-                    updateSQL += "WHERE tour_id=@tour_id";
+                    updateSQL += "WHERE id=@id";
+                    con = new SqlConnection(connectionString);
                     SqlCommand cmd = new SqlCommand(updateSQL, con);
+
                     // Add the parameters.
                     cmd.Parameters.AddWithValue("@info", TextBox1.Text);
                     cmd.Parameters.AddWithValue("@image", path);
                     cmd.Parameters.AddWithValue("@description", TextArea1.Value);
-                    cmd.Parameters.AddWithValue("@tour_id", KnownTour.Id);
+                    cmd.Parameters.AddWithValue("@id", KnownTour.Id);
 
                     // Try to open database and execute the update.
                     int updated = 0;
@@ -155,16 +168,18 @@ public partial class ManageTours : System.Web.UI.Page
                     {
                         con.Open();
                         updated = cmd.ExecuteNonQuery();
+                        LabelErrorMessage.Text = updated.ToString() + " tour was updated";
                     }
                     catch (Exception err)
                     {
-
+                        LabelErrorMessage.ForeColor = Color.Red;
+                        LabelErrorMessage.Text = "Error-the tour was not updated correctly";
                     }
                     finally
                     {
                         con.Close();
                         ClearTextBoxes();
-                        ClearDropDownLists();
+                        DropDownListsLoad(true);
 
                     }
                 }
@@ -204,22 +219,22 @@ public partial class ManageTours : System.Web.UI.Page
         {
             con.Open();
             removed = cmd.ExecuteNonQuery();
+           
 
         }
         catch (Exception err)
         {
-
+            LabelErrorMessage.ForeColor = Color.Red;
+            LabelErrorMessage.Text = "Error-the tour was not deleted";
         }
         finally
         {
             con.Close();
         }
-        ClearDropDownLists();
-        ClearTextBoxes();
+ 
 
         string deleteTourSQL;
         deleteTourSQL = "DELETE FROM tours WHERE id=@id";
-
         con = new SqlConnection(connectionString);
         cmd = new SqlCommand(deleteTourSQL, con);
 
@@ -229,17 +244,18 @@ public partial class ManageTours : System.Web.UI.Page
         {
             con.Open();
             removed = cmd.ExecuteNonQuery();
-
+            LabelErrorMessage.Text = removed.ToString() + " tour was deleted";
         }
         catch (Exception err)
         {
-
+            LabelErrorMessage.ForeColor = Color.Red;
+            LabelErrorMessage.Text="Error-the tour was not deleted";
         }
         finally
         {
             con.Close();
         }
-        ClearDropDownLists();
+        DropDownListsLoad(true);
         ClearTextBoxes();
     }
     protected void LinkButtonMain_Click(object sender, EventArgs e)

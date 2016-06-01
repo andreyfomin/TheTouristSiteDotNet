@@ -20,6 +20,7 @@
         <asp:DropDownList ID="DropDownListTours" runat="server" >
         </asp:DropDownList>
         <asp:Button ID="Delete" runat="server" Text="delete tour" OnClick="AdminDeleteTour_Click" />
+            <asp:Label ID="LabelErrorMessage" runat="server" Text="" ForeColor="Red"></asp:Label>
         </div>
    
     <div class="updateorinserttours" style="margin-left:700px">

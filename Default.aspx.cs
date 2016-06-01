@@ -12,6 +12,7 @@ using System.Data.SqlClient;
 
 public partial class _Default : System.Web.UI.Page
 {
+    string connectionString = WebConfigurationManager.ConnectionStrings["ToursDB"].ConnectionString;
     protected void Page_Load(object sender, EventArgs e)
     {
         if (this.IsPostBack == false)
@@ -20,7 +21,7 @@ public partial class _Default : System.Web.UI.Page
             string selectToursSQL = "SELECT * FROM tours";
             string selectedToursSQL = "SELECT * FROM user_selected_tours";
 
-            string connectionString = WebConfigurationManager.ConnectionStrings["ToursDB"].ConnectionString;
+           
 
             SqlConnection myConnection = new SqlConnection(connectionString);
             // myConnection.ConnectionString is now set to connectionString.
@@ -177,16 +178,20 @@ public partial class _Default : System.Web.UI.Page
             if (((User)Session["logedInUser"]).UserName.Equals("admin"))
             {
                 ManageToursLinkButton.Visible = true;
+                ManageUsersLinkButton.Visible = true;
             }
             else
+            {
                 ManageToursLinkButton.Visible = false;
-
+                ManageUsersLinkButton.Visible = false;
+            }
             if (Application["userSelectedTours"] != null)
             {
                 Hashtable currentUserSelectedToursTable = (Hashtable)Application["userSelectedTours"];
                 ArrayList currentUserSelectedTours = (ArrayList)currentUserSelectedToursTable[((User)Session["logedInUser"]).Id];
 
                 MyFavoritBulletedList.Items.Clear();
+
 
                 /*foreach (int currentUserSelectedTourId in currentUserSelectedTours)
                 {
@@ -207,6 +212,7 @@ public partial class _Default : System.Web.UI.Page
         {
             AddRemoveTourButton.Enabled = false;
             ManageToursLinkButton.Visible = false;
+            ManageUsersLinkButton.Visible = false;
             LogInOutLinkButton.Text = "Log In";
             LogdeinUserInfoHyperLink.Text = "";
         }
@@ -288,6 +294,13 @@ public partial class _Default : System.Web.UI.Page
     }
     protected void MyFavoritPanel_DataBinding(object sender, EventArgs e)
     {
+        string selectToursSQL = "SELECT * FROM user_selected_tours WHERE user_id=@user_id";
+        SqlConnection myConnection = new SqlConnection(connectionString);
+        SqlCommand cmdFavTours = new SqlCommand(selectToursSQL, myConnection);
+        SqlDataReader FavToursReader;
+        ArrayList favtours = new ArrayList(10);
+
+
 
     }
 
@@ -378,6 +391,10 @@ public partial class _Default : System.Web.UI.Page
     {
         Server.Transfer("~/ManageTours.aspx");
     }
-   
+
+    protected void UsersManagerLinkButton_Click(object sender, EventArgs e)
+    {
+        Server.Transfer("~/UsersManager.aspx");
+    }
 }
               
